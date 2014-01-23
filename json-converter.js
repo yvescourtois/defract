@@ -969,28 +969,30 @@ var article_meta = {
 
 var authors = [];
 var authors_info = [];
-var author_notes = [];
+var authors_notes = [];
 var count=1;
 while(data.nodes["contributor_"+count]) {
+  var names = data.nodes["contributor_"+count].name.split(" ");
 
-  var author "<contrib contrib-type=\"author\">name><surname>"+ data.nodes["contributor_"+count].name.split(" ")[0] + "</surname><given-names>"+ 
-  data.nodes["contributor_"+count].name.split(" ").shift().join(" ")+"</given-names></names><xref ref-type\"aff\" rid=\"A=\""+count+">*</xref></contrib>";
-  
+  var author = "<contrib contrib-type=\"author\">name><surname>"+  (names.pop())+ "</surname><given-names>"+ 
+  names.join(" ")+ "</given-names></names><xref ref-type=\"aff\" rid=\"A\""+count+">*</xref></contrib>";
   authors.push(author);
 
   var author_info = "<aff id=\"A"+count+"><label>"+count+"</label>"+""+"</aff>";
-  author_info.push(author_info);
+  authors_info.push(author_info);
 
-  var author_note = data.nodes["contributor_"+count].name +", Email: <email xlink:href=\""
+  var authors_note = data.nodes["contributor_"+count].name +", Email: <email xlink:href=\""
   +data.nodes["contributor_"+count].emails[0] +"\">" + data.nodes["contributor_"+count].emails[0] +"</email>";
-
-
+  authors_notes.push(authors_notes);
 
   count++;
-  author_notes.push(author_note);
-
 }
 
-article_meta.contrib_group = "<contrib-group"> + authors.join("") + tmp += authors_info.join("") + "</contrib-group>";
+article_meta["contrib_group"] = ("<contrib-group"> + authors.join(" ") + authors_info.join(" ") + "</contrib-group>");
 
-article_meta.author_notes = "<author-notes><corresp id=\"cor1\"<corresp id=\"cor1\"><label>*</label>Correspondence to: "+ author_notes.join(", ") + "</corresp></author-notes>";
+article_meta["author_notes"] = "<author-notes><corresp id=\"cor1\"><corresp id=\"cor1\"><label>*</label>Correspondence to: "+ authors_notes.join(", ") + "</corresp></author-notes>";
+
+article.volume = "";
+article.issue = "";
+article.fpage = "";
+article.lpage = "";
