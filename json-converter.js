@@ -1,4 +1,4 @@
-{
+var data = {
   "id": "23165203",
   "schema": [
     "lens-article",
@@ -943,4 +943,54 @@
       "target": "table_1"
     }
   }
+};
+
+var journal_meta = {
+  journal_id_nlm_ta:"<journal-id journal-id-type=\"nlm-ta\">"+data.nodes.publication_info.journal+"</journal-id>",
+  journal_id_iso_abbrev:"<journal-id journal-id-type=\"iso-abbrev\">"+""+"</journal-id>",
+  journal_id_publisher_id:"<journal-id journal-id-type=\"publisher-id\">"+""+"</journal-id>",
+  journal_title:"<journal-title-group><journal-title>"+""+"</journal-title></journal-title-group>",
+  journal_ppub:"<issn pub-type=\"ppub\">"+""+"</issn>",
+  journal_epub:"<issn pub-type=\"epub\">"+""+"</issn>",
+  journal_publisher:"<publisher><publisher-name>"+""+"</publisher-name></publisher>"
 }
+
+var article_meta = {
+  article_id_pmid:"<article-id pub-id-type=\"pmid\">"+data.id+"</article-id>",
+  article_id_pmc:"<article-id pub-id-type=\"pmc\">"+data.nodes.publication_info.xml_link.split("=").pop() + "</article>",
+  // need to fix publisher-id
+  article_id_publisher_id:"<article-id pub-id-type=\"pmc\">"+""+"</article>",
+  article_id_doi:"<article-id pub-id-type=\"pmc\">"+data.nodes.publication_info.doi.split("http://dx.doi.org/").pop()+ "</article>",
+  article_id_pii:"<article-id pub-id-type=\"pmc\">"+data.nodes.publication_info.doi.split(".").pop()+ "</article>",
+  article_categories: "<article-categories><subj-group subj-group-type=\"heading\"><subject>"
+                      +data.nodes.publication_info.article_type+"</subject></subj-group></article-categories>",
+  title:"<title-group><article-title>"+data.nodes.document.title+"</article-title></title-group>"
+}
+
+var authors = [];
+var authors_info = [];
+var author_notes = [];
+var count=1;
+while(data.nodes["contributor_"+count]) {
+
+  var author "<contrib contrib-type=\"author\">name><surname>"+ data.nodes["contributor_"+count].name.split(" ")[0] + "</surname><given-names>"+ 
+  data.nodes["contributor_"+count].name.split(" ").shift().join(" ")+"</given-names></names><xref ref-type\"aff\" rid=\"A=\""+count+">*</xref></contrib>";
+  
+  authors.push(author);
+
+  var author_info = "<aff id=\"A"+count+"><label>"+count+"</label>"+""+"</aff>";
+  author_info.push(author_info);
+
+  var author_note = data.nodes["contributor_"+count].name +", Email: <email xlink:href=\""
+  +data.nodes["contributor_"+count].emails[0] +"\">" + data.nodes["contributor_"+count].emails[0] +"</email>";
+
+
+
+  count++;
+  author_notes.push(author_note);
+
+}
+
+article_meta.contrib_group = "<contrib-group"> + authors.join("") + tmp += authors_info.join("") + "</contrib-group>";
+
+article_meta.author_notes = "<author-notes><corresp id=\"cor1\"<corresp id=\"cor1\"><label>*</label>Correspondence to: "+ author_notes.join(", ") + "</corresp></author-notes>";
