@@ -974,25 +974,54 @@ var count=1;
 while(data.nodes["contributor_"+count]) {
   var names = data.nodes["contributor_"+count].name.split(" ");
 
-  var author = "<contrib contrib-type=\"author\">name><surname>"+  (names.pop())+ "</surname><given-names>"+ 
+  var author = "<contrib contrib-type=\"author\">name><surname>"+ names.pop() + "</surname><given-names>"+ 
   names.join(" ")+ "</given-names></names><xref ref-type=\"aff\" rid=\"A\""+count+">*</xref></contrib>";
   authors.push(author);
 
   var author_info = "<aff id=\"A"+count+"><label>"+count+"</label>"+""+"</aff>";
   authors_info.push(author_info);
 
-  var authors_note = data.nodes["contributor_"+count].name +", Email: <email xlink:href=\""
-  +data.nodes["contributor_"+count].emails[0] +"\">" + data.nodes["contributor_"+count].emails[0] +"</email>";
-  authors_notes.push(authors_notes);
+  var email = data.nodes["contributor_"+count].emails[0];
+
+  var authors_note = data.nodes["contributor_"+count].name +", Email: <email xlink:href=\"" + email +"\">" + email +"</email>";
+  authors_notes.push(authors_note);
 
   count++;
 }
 
 article_meta["contrib_group"] = ("<contrib-group"> + authors.join(" ") + authors_info.join(" ") + "</contrib-group>");
 
-article_meta["author_notes"] = "<author-notes><corresp id=\"cor1\"><corresp id=\"cor1\"><label>*</label>Correspondence to: "+ authors_notes.join(", ") + "</corresp></author-notes>";
+article_meta["author_notes"] = "<author-notes><corresp id=\"cor1\"><corresp id=\"cor1\"><label>*</label>Correspondence to: "+ authors_notes.join(" ") + "</corresp></author-notes>";
 
-article.volume = "";
-article.issue = "";
-article.fpage = "";
-article.lpage = "";
+article_meta.volume = "";
+article_meta.issue = "";
+article_meta.fpage = "";
+article_meta.lpage = "";
+
+count = 1;
+var cite_count = 1;
+var emph_count = 1;
+
+var body = [];
+
+while(data.nodes["text_"+count]) {
+  var tmp = data.nodes["text_"+count].content;
+  
+  var tmp_cite_count = cite_count;
+  while(data.nodes["citation_reerence_"+tmp_cite_count]) {
+    if(tmp.charAt(data.nodes["citation_reference_"+cite_count].range[0]+1 == cite_count) ==) {
+      tmp = tmp.substring(0, data.nodes["citation_reference_"+cite_count].range[1])
+      + '<xref ref-type="bibr" rid ="R"'+citeCount+'\"\"+><sup>'+cite_count+'</sup></xref>' 
+      + tmp.substring( data.nodes["citation_reference_"+cite_count].range[1] + 1);
+    }
+    ++tmp_cite_count;
+  }
+  
+  // body["text_"+count] = "<p>"+tmp;
+  // if(data.nodes["citation_reference_"+count] <= tmp.length) {
+  //   body["text_"+count] += 
+  // }
+
+  body["text_"+count] += "</p>";
+  ++count;
+}
